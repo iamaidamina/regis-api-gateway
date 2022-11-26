@@ -40,7 +40,7 @@ def before_request_callback():
     elif verify_jwt_in_request():
         usuario = get_jwt_identity()
         if usuario["rol"]is not None:
-            tienePersmiso=validarPermiso(endPoint,request.method,usuario["rol"]["_id"])
+            tienePersmiso=validarPermiso(endPoint,request.method,usuario["rol"]["_Id"])
             if not tienePersmiso:
                 return jsonify({"message": "Permission denied"}), 401
         else:
@@ -62,7 +62,7 @@ def validarPermiso(endPoint,metodo,idRol):
     response = requests.get(url,json=body, headers=headers)
     try:
         data=response.json()
-        if("_id" in data):
+        if("_Id" in data):
             tienePermiso=True
     except:
         pass
@@ -70,14 +70,14 @@ def validarPermiso(endPoint,metodo,idRol):
 
 #####################################################################################################
 @app.route("/votingtables",methods=['GET'])
-def getMesasVotacion():
+def getVotingTables():
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-backend-results"] + '/votingtables'
     response = requests.get(url, headers=headers)
     json = response.json()
     return jsonify(json)
 @app.route("/votingtables",methods=['POST'])
-def crearMesaVotacion():
+def createVotingTables():
     data = request.get_json()
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-backend-results"] + '/votingtables'
@@ -85,14 +85,14 @@ def crearMesaVotacion():
     json = response.json()
     return jsonify(json)
 @app.route("/votingtables/<string:id>",methods=['GET'])
-def getMesaVotacion(id):
+def getVotingTable(id):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-backend-results"] + '/votingtables/'+id
     response = requests.get(url, headers=headers)
     json = response.json()
     return jsonify(json)
 @app.route("/votingtables/<string:id>",methods=['PUT'])
-def modificarMesaVotacion(id):
+def updateVotingTable(id):
     data = request.get_json()
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-backend-results"] + '/votingtables/'+id
@@ -100,13 +100,50 @@ def modificarMesaVotacion(id):
     json = response.json()
     return jsonify(json)
 @app.route("/votingtables/<string:id>",methods=['DELETE'])
-def eliminarMesaVotacion(id):
+def deleteVotingTable(id):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-backend-results"] + '/votingtables/' + id
     response = requests.delete(url, headers=headers)
     json = response.json()
     return jsonify(json)
-
+#####################################################################################################
+@app.route("/politicalparties",methods=['GET'])
+def getPoliticalParties():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-results"] + '/politicalparties'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+@app.route("/politicalparties",methods=['POST'])
+def createPoliticalParty():
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-results"] + '/politicalparties'
+    response = requests.post(url, headers=headers,json=data)
+    json = response.json()
+    return jsonify(json)
+@app.route("/politicalparties/<string:id>",methods=['GET'])
+def getPoliticalParty(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-results"] + '/politicalparties/'+id
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+@app.route("/politicalparties/<string:id>",methods=['PUT'])
+def updatePoliticalParty(id):
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-results"] + '/politicalparties/'+id
+    response = requests.put(url, headers=headers, json=data)
+    json = response.json()
+    return jsonify(json)
+@app.route("/politicalparties/<string:id>",methods=['DELETE'])
+def deletePoliticalParty(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-results"] + '/politicalparties/' + id
+    response = requests.delete(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
 
 ###################################################################################################
 @app.route("/",methods=['GET'])
